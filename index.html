@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGGS College Bus Tracking Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+    
+    header {
+            text-align:left;
+            left: 0;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        /* Mobile Menu */
+        .menu {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 0;
+            background-color: #2c3e50;
+            width: 200px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .menu a:hover {
+            background-color: #16a085;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+        }
+
+        .hamburger div {
+            width: 30px;
+            height: 4px;
+            background-color: white;
+            margin: 6px 0;
+        }
+
+        /* Ensure hamburger menu is always visible */
+        .menu.active {
+            display: block;
+        }
+    
+ 
+
+
+    /* Loader Styles */
+    #loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* Highest z-index to appear on top */
+    }
+
+    #loader video {
+        width: 256px;
+        height: 256px;
+    }
+
+    /* Hide content until loader disappears */
+    .hidden-content {
+        display: none;
+    }
+
+
+
+
+        /* Global Styles */
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background-image: url('https://www.sggs.ac.in/uploads/home_banner/1670069016.png');
+            background-size: cover; /* Cover the entire screen */
+            background-attachment: fixed; /* Fixed background */
+            background-position: center; /* Center the background */
+            color: #f0f0f0; /* Light text for better readability */
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Header and Navigation */
+        header {
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent header */
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            align-items: left;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        header img {
+            width: 70px;
+            border-radius: 100%;
+            
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        
+        /* Hero Section */
+        #hero {
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+            height: 100vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #hero h2 {
+            font-size: 52px;
+            margin-bottom: 20px;
+            animation: slideDown 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+
+        #hero p {
+            font-size: 22px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            animation: fadeIn 1.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        #hero button {
+            padding: 15px 40px;
+            background-color: #ff9800
+            ;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50px;
+            animation: fadeIn 2s ease-out forwards;
+            opacity: 0;
+        }
+
+        #hero button:hover {
+            background-color: #b28a4e;
+        }
+
+        @keyframes slideDown {
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #services button {
+            padding: 15px 40px;
+            background-color: #ff9800
+            ;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50px;
+            animation: fadeIn 2s ease-out forwards;
+            opacity: 0;
+        }
+
+        #services button:hover {
+            background-color: #cba66f;
+        }
+
+        @keyframes slideDown {
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Main Content */
+        #services {
+            padding: 80px 50px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent section */
+        }
+
+        #services h2 {
+            font-size: 40px;
+            margin-bottom: 50px;
+            color: #ff9800
+            ; /* Changed to yellow */
+        }
+
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 0 50px;
+        }
+
+        .service-card {
+            background-color: #444; /* Changed for better contrast */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .service-card h3 {
+            font-size: 26px;
+            margin: 20px;
+            color: #ff9800
+            ; /* Changed to yellow */
+        }
+
+        .service-card p {
+            font-size: 16px;
+            margin: 0 20px 20px;
+            color: #f0f0f0; /* Changed to white */
+        }
+
+
+
+
+
+        
+
+
+
+        /* Map Section */
+        #map-section {
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent section */
+            padding: 60px 0;
+        }
+
+        #map {
+            height: 500px;
+            width: 90%;
+            margin: auto;
+        }
+
+        #map-section h2 {
+            font-size: 40px;
+            margin-bottom: 50px;
+            color: #ff9800
+            ; /* Changed to yellow */
+        }
+
+
+        .map-section-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 0 50px;
+        }
+
+        .map-section-card {
+            background-color: #444; /* Changed for better contrast */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .map-section-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .map-section-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .map-section-card h3 {
+            font-size: 26px;
+            margin: 20px;
+            color: #ff9800
+            ; /* Changed to yellow */
+        }
+
+        .map-section-card p {
+            font-size: 16px;
+            margin: 0 20px 20px;
+            color: #f0f0f0; /* Changed to white */
+        }
+
+        /* Bus Stop Details */
+        #stop-details {
+            padding: 60px 50px;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent section */
+        }
+
+        #stop-details h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 40px;
+            color: #ff9800
+            ; /* Changed to yellow */
+        }
+
+        .stop-details-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .stop-detail {
+            background-color: #444; /* Changed for better contrast */
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stop-detail:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .stop-detail h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #ff9800
+            ; /* Changed to yellow */
+        }
+
+        .stop-detail p {
+            color: #f0f0f0; /* Changed to white */
+        }
+
+
+        /*new added */
+        
+        /* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #645e5e;
+}
+
+/* Section Header */
+#stop-details h2 {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 2em;
+  color: #ff9800;
+}
+
+/* Stop Details List */
+.stop-details-list {
+  margin: 20px auto;
+  width: 80%;
+}
+
+/* Stop Detail Card */
+.stop-detail {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(100px);
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+.stop-detail h3 {
+  font-size: 1.5em;
+  color: #333;
+}
+
+.stop-detail p {
+  font-size: 1.1em;
+  color: #555;
+}
+
+/* Route List Style */
+.route-list {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.route-list li {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+  font-size: 1.1em;
+}
+
+.route-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #007bff;
+}
+
+.route-list li:hover {
+  color: #007bff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+/* Scroll Animation */
+.stop-detail.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Styling for the Bus Animation */
+.bus {
+  position: fixed;
+  top: 50%;
+  left: -60px;
+  width: 60px;
+  height: 60px;
+  background-color: #f39c12;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: left 1s ease-out;
+}
+
+/* Active Bus Stop Highlight */
+.route-list li.active {
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+
+        /* Testimonials Section */
+        #testimonials {
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent section */
+            padding: 80px 50px;
+            text-align: center;
+        }
+
+        #testimonials h2 {
+            font-size: 40px;
+            margin-bottom: 50px;
+            color: #ff9800
+            ; /* Changed to yellow */
+        }
+
+        .testimonial-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .testimonial-card {
+            background-color: #444; /* Changed for better contrast */
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 350px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .testimonial-card p {
+            font-size: 18px;
+            color: #f0f0f0; /* Changed to white */
+            margin-bottom: 20px;
+        }
+
+        .testimonial-card .author {
+            font-size: 16px;
+            color: #ff9800; /* Changed to orange */
+        }
+
+         /* Meet the Founder Section */
+         #founder {
+            padding: 80px 50px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #founder img {
+            width: 200px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        #founder h2 {
+            font-size: 36px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        #founder p {
+            font-size: 18px;
+            color: #f0f0f0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #founder a {
+            color: #ff9800;
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent footer */
+            color: #f0f0f0;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 16px;
+        }
+
+        
+        /* Add this to make content responsive */
+        @media (max-width: 768px) {
+            /* Header adjustments */
+            header {
+                flex-direction: column;
+                padding: 15px;
+                text-align: left;
+            }
+
+            header h1 {
+                font-size: 30px;
+            }
+
+
+            /* Hero Section */
+            #hero h2 {
+                font-size: 36px;
+            }
+
+            #hero p {
+                font-size: 18px;
+                padding: 0 20px;
+            }
+
+            #hero button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            /* Service Section */
+            .service-cards {
+                grid-template-columns: 1fr; /* Stack cards in a single column */
+                padding: 0;
+            }
+
+            .service-card img {
+                height: auto;
+            }
+
+            /* Map Section */
+            .map-section-cards {
+                grid-template-columns: 1fr; /* Stack cards in a single column */
+                gap: 20px;
+            }
+
+            /* Testimonials */
+            .testimonial-cards {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .testimonial-card {
+                max-width: 100%;
+                padding: 15px;
+            }
+
+            /* Stop Details */
+            .stop-details-list {
+                grid-template-columns: 1fr; /* Stack in one column */
+                gap: 20px;
+            }
+
+            /* Founder Section */
+            #founder img {
+                width: 150px;
+            }
+
+            #founder p {
+                font-size: 16px;
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Further adjustments for very small screens */
+            header {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 18px;
+            }
+
+
+            #hero h2 {
+                font-size: 28px;
+            }
+
+            #hero p {
+                font-size: 16px;
+            }
+
+            #hero button {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+        }
+                /* Mobile responsive adjustments */
+                @media (max-width: 768px) {
+            .bus-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .bus-card {
+                width: 80%;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Loader Overlay (Add this to your body section) -->
+<div id="loader-overlay">
+    <div id="loader">
+        <video width="256" height="256" autoplay="autoplay" loop="loop" playsinline="playsInline" muted="muted">
+            <source src="https://static.genially.com/resources/editor-loader-rebranding.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+
+
+<!-- Wrap your current body content in this div -->
+<div class="hidden-content">
+    <!-- Header -->
+    <header>
+        <h1><img src="https://i.ibb.co/b7z7YQ4/logo.jpg" alt="college bus"  > LaalPari</h1>
+
+                <!-- Hamburger Icon for mobile menu -->
+                <div class="hamburger" onclick="toggleMenu()">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </header>
+        
+            <!-- Mobile Navigation Menu -->
+            <div class="menu" id="menu">
+                <a href="index.html">Home</a>
+                <a href="time.html">bus timing</a>
+                <a href="#services">Services</a>
+                <a href="#map-section">Track Bus</a>
+                <a href="#stop-details">Stops</a>
+                <a href="#testimonials">Reviews</a>
+                <a href="#founder">Contact</a>
+            </div>
+
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <h2>Welcome to SGGS Bus Tracking Service</h2>
+        <p>Track your college bus in real-time with ease. Never miss your ride again!</p>
+        <button onclick="location.href='time.html'">Track your bus here</button>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <h2>Our Services</h2>
+        <div class="service-cards">
+            <div class="service-card">
+                <img src="https://imgs.search.brave.com/JwJougy1g2ZtDK0r-jWGX2wnyz2jbXHMBrzWqqHxazI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/aXN0YXJ0ZWsuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDI0/LzA1L0dQUy1UcmFj/a2VyLWZvci1Zb3Vy/LUNhdC5qcGc" alt="GPS Tracking">
+                <h3>Real-Time GPS Tracking</h3>
+                <p>Track the live location of your college bus with our easy-to-use app.</p>
+            </div>
+            <div class="service-card">
+                <img src="https://imgs.search.brave.com/WWWWxmvLuzhH9r0qAolMwd1oan_A-zp8eMN2hPNf5Hw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNjEy/NDg1ODk2L3Bob3Rv/L2Nsb3NlLXVwLXR3/by1oYW5kLWhvbGRp/bmctbW9iaWxlLXBo/b25lLXdpdGgtbW9i/aWxlLWZyaWVuZGx5/LndlYnA_Yj0xJnM9/MTcwNjY3YSZ3PTAm/az0yMCZjPXR4cEZE/R0Z1UmhHNVZpbzhU/NDdTNGUwcFhXWVZM/UkZpZVRSS1hOOWhL/NFk9" alt="Mobile App">
+                <h3>Mobile Friendly</h3>
+                <p>Our platform is mobile-friendly for seamless tracking on the go.</p>
+            </div>
+            <div class="service-card">
+                <img src="https://imgs.search.brave.com/xtvl_LJoz5Fp93heyQkfA6Wv0CWSJHDVRo_JLwYCbno/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBj/bWFnLmNvbS9pbWFn/ZXJ5L2FydGljbGVz/LzAxSUIwcmdOYTRs/R01CbG1MeWkwVlA2/LTQ0LmZpdF9saW0u/djE2NDM4MTg4NTAu/anBn" alt="Bus Stops">
+                <h3>All Stops Covered</h3>
+                <p>Get all the bus stop details and timings in one place.</p>
+            </div>
+        </div><br>
+        <button onclick="location.href='#map-section'">Explore map-section</button>
+    </section>
+
+    <!-- Map Section -->
+    <section id="map-section">
+        <h2>Track Your Bus</h2>
+        <div class="map-section-cards">
+            <div class="map-section-card">
+                <img src="https://i.ibb.co/483qwJd/bus.jpg" alt="college bus" height="150" >
+                <h3>Buses avelable</h3>
+                <p>2 buses each for 2 different rout in the city.</p>
+            </div>
+            <div class="map-section-card">
+                <a href="time.html"> <img src="https://i.ibb.co/4Ptyn9w/bus1.jpg" alt="college bus" height="150" ></a>
+                
+                <h3>track your bus </h3>
+                <p>the bus tracking is going to be very easy on the mobile friendly interface .</p>
+            </div>
+        </div>
+
+
+        
+        
+        <!-- <div id="map">    this is in the comments for now 
+            Your Google Maps integration code here
+        </div> -->
+    </section>
+
+    <!-- Stop Details Section -->
+    <section id="stop-details">
+        <h2>Bus Stops Information</h2>
+        <div class="stop-details-list">
+          <!-- Anand Nagar Stop -->
+          <div class="stop-detail" id="anand-nagar-stop">
+            <h3>Anand Nagar Stop</h3>
+            <p>Details about Anand Nagar stop, timings, and amenities.</p>
+            <ul class="route-list">
+              <li>College</li>
+              <li>Ravi Nagar</li>
+              <li>Kavtha Gas Pump</li>
+              <li>Ayurvedic College Gate</li>
+              <li>Shivaji Nagar</li>
+              <li>Bata Showroom</li>
+              <li>ITI Stop</li>
+              <li>Pawde Wadi Naka</li>
+              <li>Mor Chawk</li>
+              <li>Chhatrapati Chawk</li>
+              <li>BSNL Office</li>
+              <li>Sitchan Bhavan</li>
+              <li>Shri Nagar</li>
+              <li>ITI Stop</li>
+              <li>Shivaji Nagar</li>
+              <li>Ayurvedic College Gate Samor</li>
+              <li>Gas Pump Samor</li>
+              <li>Ravi Nagar</li>
+              <li>College</li>
+            </ul>
+          </div>
+      
+          <!-- Ram Nagar Stop -->
+          <div class="stop-detail" id="ram-nagar-stop">
+            <h3>Ram Nagar Stop</h3>
+            <p>Details about Ram Nagar stop, timings, and amenities.</p>
+            <ul class="route-list">
+              <li>College</li>
+              <li>Ravi Nagar</li>
+              <li>Kavtha Gas Pump</li>
+              <li>Ayurvedic College Gate</li>
+              <li>Shivaji Nagar</li>
+              <li>Bata Showroom</li>
+              <li>ITI Stop</li>
+              <li>Pawde Wadi Naka</li>
+              <li>Mor Chawk</li>
+              <li>Chhatrapati Chawk</li>
+              <li>BSNL Office</li>
+              <li>Sitchan Bhavan</li>
+              <li>Shri Nagar</li>
+              <li>ITI Stop</li>
+              <li>Shivaji Nagar</li>
+              <li>Ayurvedic College Gate Samor</li>
+              <li>Gas Pump Samor</li>
+              <li>Ravi Nagar</li>
+              <li>College</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      
+
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <h2>What Our Users Say</h2>
+        <div class="testimonial-cards">
+            <div class="testimonial-card">
+                <p>"The bus tracking web is incredibly useful! Now I never miss my bus."</p>
+                <span class="author">- Aditya G.</span>
+            </div>
+            <div class="testimonial-card">
+                <p>"A must-have for every SGGS student. Simple and effective!"</p>
+                <span class="author">- rohit G.</span>
+            </div>
+            <div class="testimonial-card">
+                <p>"because of this now i am not missing my bus and i can track the bus from home ,there is also a notification feature that tells us if the bus is near out stop "</p>
+                <span class="author">- Parth D.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <pre>© 2024 SGGS College Bus Tracking Service. All rights reserved.
+
+
+        </pre>
+
+
+
+
+        
+    </footer>
+
+</div>
+
+
+
+    
+
+    <!-- JavaScript to hide the loader after 3 seconds and show the website content -->
+<script>
+    window.addEventListener('load', function () {
+        // Set a timeout to hide the loader after 3 seconds
+        setTimeout(function () {
+            document.getElementById('loader-overlay').style.display = 'none'; // Hide loader
+            document.querySelector('.hidden-content').style.display = 'block'; // Show website content
+        }, 000); // 3 seconds delay
+    });
+
+
+            // Function to toggle mobile menu
+            function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('active');
+        }
+
+
+
+        /*new added*/
+        // Scroll-based Animation
+const stopDetails = document.querySelectorAll('.stop-detail');
+const bus = document.createElement('div');
+bus.classList.add('bus');
+document.body.appendChild(bus);
+
+let currentStopIndex = 0;
+
+// Function to animate stops when scrolling
+function onScroll() {
+  stopDetails.forEach((stop, index) => {
+    const stopPosition = stop.getBoundingClientRect().top;
+    if (stopPosition < window.innerHeight * 0.8) {
+      stop.classList.add('active');
+    } else {
+      stop.classList.remove('active');
+    }
+
+    // Move bus to next stop
+    if (stopPosition < window.innerHeight * 0.7 && index > currentStopIndex) {
+      currentStopIndex = index;
+      animateBusToStop(stop);
+    }
+  });
+}
+
+// Function to animate the bus to the next stop
+function animateBusToStop(stop) {
+  const stopTop = stop.getBoundingClientRect().top;
+  bus.style.left = `${window.innerWidth / 2 - 30}px`; // Center bus horizontally
+  bus.style.top = `${stopTop + window.scrollY - 30}px`; // Move bus vertically
+}
+
+// Initialize scroll listener
+window.addEventListener('scroll', onScroll);
+
+// Trigger scroll animation on load
+onScroll();
+
+
+</script>
+
+
+
+    <!-- Optional JavaScript -->
+    <script>
+        // Add your JavaScript if needed
+    </script>
+</body>
+
+</html>

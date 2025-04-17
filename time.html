@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Bus</title>
+    <style>
+        /* Reset and Body Styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #2d3c56;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0 15px;
+            font-size: 16px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header Section */
+        .header {
+            background-image: url('https://www.sggs.ac.in/uploads/home_banner/1670069016.png');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            color: white;
+            padding: 50px 20px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            font-size: 18px;
+            margin-top: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        /* Timing Sections */
+        .section {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .timing-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .timing-buttons a {
+            text-decoration: none;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 15px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .timing-buttons a:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #2d3c56;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Section Background Styling */
+        .morning-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://i.ibb.co/483qwJd/bus.jpg') center/cover no-repeat;
+        }
+
+        .evening-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://i.ibb.co/483qwJd/bus.jpg') center/cover no-repeat;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .timing-buttons a {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">Bus Tracking</div>
+        <div class="menu">
+            <a href="index.html">Home</a>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Track Your Bus</h1>
+        <p>Select your preferred timing to track your bus in real-time!</p>
+    </div>
+
+    <!-- Morning Session -->
+    <div class="section morning-section">
+        <h2>Morning Session</h2>
+        <div class="timing-buttons">
+            <a href="bus.html?time=7:30">7:30 AM</a>
+            <a href="bus.html?time=8:30">8:30 AM</a>
+            <a href="bus.html?time=9:30">9:30 AM</a>
+            <a href="bus.html?time=10:30">10:30 AM</a>
+        </div>
+    </div>
+
+    <!-- Evening Session -->
+    <div class="section evening-section">
+        <h2>Evening Session</h2>
+        <div class="timing-buttons">
+            <a href="bus.html?time=5:30">5:30 PM</a>
+            <a href="bus.html?time=6:30">6:30 PM</a>
+            <a href="bus.html?time=6:45">6:45 PM</a>
+        </div>
+    </div>
+
+</body>
+</html>
